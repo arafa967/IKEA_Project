@@ -17,7 +17,7 @@ namespace IKEA.BLL.Models.Department
         //public bool IsDeleted { get; set; }
         public String Name { get; set; } = null!;
         public string Code { get; set; } = null!;
-        //public string? Description { get; set; }
+        public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }

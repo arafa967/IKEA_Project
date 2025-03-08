@@ -1,5 +1,6 @@
 ﻿using IKEA.BLL.Models.Department;
 using IKEA.BLL.Serveise;
+using IKEA.PL.Models.Departments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IKEA.PL.Controllers
@@ -80,6 +81,131 @@ namespace IKEA.PL.Controllers
         }
         #endregion
         #endregion
+        #region Details
+        [HttpGet] // Dapertment /Details/id
+        public IActionResult Details(int? id)
+        {
+            if(id is null)
+            {
+                return BadRequest();//400
 
+            }
+            var department  = _departmentService .GetDepartmentById(id.Value);
+            if(department is null)
+            {
+                return NotFound(); //404
+            }
+            return View(department);    
+        }
+        #endregion
+        #region Edit
+        #region Get
+        [HttpGet] // Department/Edit/id?
+        public IActionResult Edit(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest(); //400
+            }
+            var department = _departmentService.GetDepartmentById(id.Value);
+            if (department is null)
+            {
+                return NotFound(); //404
+            }
+            return View( new DepartmentEditViewModel()
+            {
+                Code = department.Code,
+                Name = department.Name,
+                Description= department.Description,
+                CreatedDate = department.CreatedDate
+            });
+        }
+        #endregion
+        #region Post
+        [HttpPost]
+        public IActionResult Edit([FromRoute] int  id ,DepartmentEditViewModel departmentVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(departmentVM);
+
+            }var message = string.Empty;
+            try
+            {
+                var updatedDepartment = new UpdatedDeparmentDTO()
+                {
+                    Id = id,
+                    Code = departmentVM.Code,
+                    Name = departmentVM.Name,
+                    Description = departmentVM.Description,
+                    CreatedDate = departmentVM.CreatedDate,
+                };
+                var updated = _departmentService.UpdateDeparment(updatedDepartment) > 0;
+                if (updated)
+                {
+                    return RedirectToAction(nameof(Index));
+
+                }
+                message = "Sorry , An Error Ocuurd While Updated the Department ";
+
+            }
+            catch (Exception ex)
+            {
+                //1- Log Exception
+                _logger .LogError(ex, ex.Message);
+                //2- Set Message
+                message =_environment.IsDevelopment()? ex.Message :  "Sorry , An Error Ocuured While Upating The Department ";
+
+            }
+            ModelState.AddModelError(string.Empty, message);
+            return View(departmentVM);
+        }
+        #endregion
+        #endregion
+        #region Delete
+        #region Get
+        [HttpGet]
+        public IActionResult Delete(int? id) 
+        {
+            if(id is null)
+            {
+                return BadRequest();
+            }
+            var department  = _departmentService.GetDepartmentById(id.Value);
+            if(department is null)
+            {
+                return NotFound();
+            }
+            return View(department);
+
+        }
+        #endregion
+        #region Post
+        [HttpPost]
+        public IActionResult Delete (int id)
+        {
+            var message = string.Empty;
+            try
+            {
+                var delete = _departmentService.DeleteDepartment(id);
+                if (delete)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                message = "Sorry , An Get Error Ocuured During Deleting the Department";
+
+            }
+            catch(Exception ex)
+            { 
+                //1-Log Exception 
+                _logger.LogError(ex, ex.Message);
+                //2- Set Message 
+                message = _environment.IsDevelopment()? ex.Message : "Sorry , An Get Error Ocuured During Deleting the Department";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+         
+        #endregion
+        #endregion
     }
 }
