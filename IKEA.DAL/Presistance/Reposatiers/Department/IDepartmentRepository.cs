@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using IKEA.DAL.Models.Departmens; 
 namespace IKEA.DAL.Presistance.Reposatiers.Department
 {
-    internal interface IDepartmentRepository
+    public interface IDepartmentRepository
     {
         IEnumerable<Depaertment>GetAll(bool withNoTracking =true);
+        IQueryable<Depaertment> GetAllAsQuarable();
         Depaertment? GetById(int id);
         int Add (Depaertment entity);
         int Update (Depaertment entity);

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IKEA.DAL.Presistance.Reposatiers.Department
 {
-    internal class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -54,6 +54,11 @@ namespace IKEA.DAL.Presistance.Reposatiers.Department
         {
             _dbContext?.Depaertments.Remove(entity);
             return _dbContext.SaveChanges();
+        }
+
+        public IQueryable<Depaertment> GetAllAsQuarable()
+        {
+            return _dbContext.Depaertments;
         }
     }
 }
