@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IKEA.DAL.Models.Departmens; 
+using IKEA.DAL.Models.Departmens;
+using IKEA.DAL.Presistance.Reposatiers._Generic;
 namespace IKEA.DAL.Presistance.Reposatiers.Department
 {
-    internal interface IDepartmentRepository
+    internal interface IDepartmentRepository : IGenericRepository<Depaertment>
     {
-        IEnumerable<Depaertment>GetAll(bool withNoTracking =true);
-        Depaertment? GetById(int id);
-        int Add (Depaertment entity);
-        int Update (Depaertment entity);
-        int Delete (Depaertment entity );
-
+      
     }
 }
